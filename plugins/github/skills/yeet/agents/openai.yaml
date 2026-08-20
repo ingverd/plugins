@@ -3,4 +3,4 @@ interface:
   short_description: "Commit, push, and open a PR"
   icon_small: "./assets/yeet-small.svg"
   icon_large: "./assets/yeet.png"
-  default_prompt: "Use $yeet to confirm the intended changes, create a focused commit, push it, and open a draft pull request."
+  default_prompt: "Use $yeet to publish the intended changes in one continuous branch, stage, commit, push, and PR workflow without per-step confirmation. Never merge or enable auto-merge; hand the PR to the user."
