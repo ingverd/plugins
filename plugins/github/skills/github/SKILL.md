@@ -41,7 +41,8 @@ Prefer the GitHub app from this plugin for those flows because it provides struc
    - `repo or PR triage`: summarize PRs, issues, patches, comments, labels, reactions, or repository state
    - `review follow-up`: unresolved review threads, requested changes, or inline review feedback
    - `CI debugging`: failing checks, Actions logs, or CI root-cause analysis
-   - `publish changes`: create or switch branches, stage changes, commit, push, and open a draft PR
+   - `publish changes`: already-authorized repository work is expected to produce a PR, or the user explicitly asks to publish; create or switch branches, stage changes, commit, push, and open the PR
+   - Treat a clear PR deliverable as authorization for that complete publish workflow, not as authorization to begin otherwise-unapproved implementation. Do not request separate confirmation for branch setup, staging, commit, push, or PR creation. A request explicitly limited to local changes, a patch, review, or planning does not imply publication.
 3. Route to the specialist skill as soon as the category is clear:
    - Review comments and requested changes: `../gh-address-comments/SKILL.md`
    - Failing GitHub Actions checks: `../gh-fix-ci/SKILL.md`
@@ -63,6 +64,7 @@ Prefer the GitHub app from this plugin for those flows because it provides struc
 - For triage requests, return a concise summary of the repository, PR, or issue state and the next likely action.
 - For mixed requests, tell the user which specialist path you are taking and why.
 - For connector-backed write actions, restate the exact PR, issue, label, or reaction target before applying the change.
+- For publish work, complete the expected PR artifact unless blocked. Never merge a pull request or enable auto-merge; hand the PR to the user.
 - Never imply that GitHub Actions logs are available through the connector alone. That remains a `gh` workflow.
 
 ## Examples

@@ -1,13 +1,15 @@
 ---
 name: "yeet"
-description: "Publish local changes to GitHub by confirming scope, committing intentionally, pushing the branch, and opening a draft PR through the GitHub app from this plugin, with `gh` used only as a fallback where connector coverage is insufficient."
+description: "Publish already-authorized repository work when a pull request is the expected artifact or the user asks to publish. Run branch setup, staging, commit, push, and PR creation as one continuous workflow without per-step confirmation; never merge the PR."
 ---
 
 # GitHub Publish Changes
 
 ## Overview
 
-Use this skill only when the user explicitly wants the full publish flow from the local checkout: branch setup if needed, staging, commit, push, and opening a pull request.
+Use this skill when already-authorized repository work is expected to produce a pull request or the user explicitly asks to publish changes. A clear PR deliverable authorizes the complete standard flow from the local checkout: branch setup if needed, staging the intended scope, commit, push, and pull-request creation. It does not authorize otherwise-unapproved implementation. Do not pause for separate confirmation of those component steps.
+
+If the user explicitly limits the request to local changes, a patch, review, or planning without publication, do not publish. When a PR is expected, opening it is required unless material scope or target ambiguity, a higher-priority required gate, or a concrete blocker prevents completion. Never merge a pull request or enable auto-merge; hand the PR to the user.
 
 This workflow is hybrid:
 
@@ -29,7 +31,7 @@ This workflow is hybrid:
 
 ## Workflow
 
-1. Confirm intended scope.
+1. Establish intended scope.
    - Run `git status -sb` and inspect the diff before staging.
    - If the working tree contains unrelated changes, do not default to `git add -A`. Ask the user which files belong in the PR.
 2. Determine the branch strategy.
@@ -38,7 +40,7 @@ This workflow is hybrid:
 3. Stage only the intended changes.
    - Prefer explicit file paths when the worktree is mixed.
    - Use `git add -A` only when the user has confirmed the whole worktree belongs in scope.
-4. Commit tersely with the confirmed description.
+4. Commit tersely with the established description.
 5. Run the most relevant checks available if they have not already been run.
    - If checks fail due to missing dependencies or tools, install what is needed and rerun once.
 6. Push with tracking: `git push -u origin $(git branch --show-current)`.
@@ -50,13 +52,16 @@ This workflow is hybrid:
    - If the branch is being pushed from a fork or the PR target differs from the remote that was just pushed, prefer `gh pr create` fallback because the connector PR creation flow expects one repository target and may not encode cross-repo head semantics cleanly.
    - If connector-based PR creation cannot infer the repository or branch cleanly, fall back to `gh pr create --draft --fill --head $(git branch --show-current)`.
    - Write the PR body to a temp file with real newlines when using CLI fallback so the markdown renders cleanly.
-8. Summarize the result with branch name, commit, PR target, validation, and anything the user still needs to confirm.
+8. Summarize the result with branch name, commit, PR target, validation, and any concrete blocker or follow-up.
 
 ## Write Safety
 
 - Never stage unrelated user changes silently.
 - Never push without confirming scope when the worktree is mixed.
-- Default to a draft PR unless the user explicitly asks for a ready-for-review PR.
+- Do not ask for separate branch, stage, commit, push, or PR-creation approvals after the PR deliverable is clear.
+- Do not stop after local edits, commit, or push when the expected artifact is a PR.
+- Never merge a pull request or enable auto-merge; hand the PR to the user.
+- Follow higher-priority repository instructions for draft versus ready-for-review state. Otherwise default to a draft PR unless the user explicitly asks for ready-for-review.
 - If the repository does not appear to be connected to an accessible GitHub remote, stop and explain the blocker before making assumptions.
 
 ## PR Body Expectations
